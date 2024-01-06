@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { IUser, userModel } from "../../models/user";
 
-const registrationController = async (req: Request, res: Response) => {
+export const registrationController = async (req: Request, res: Response) => {
   try {
     const { username, email, password1, password2 } = req.body;
     // Check if the passwords match
@@ -31,5 +31,3 @@ const registrationController = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-export default registrationController

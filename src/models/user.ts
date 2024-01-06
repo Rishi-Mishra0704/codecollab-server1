@@ -22,7 +22,9 @@ UserSchema.pre<IUser>("save", async function (next) {
 
   const saltRounds = 10;
   const hashedPassword1 = await bcrypt.hash(user.password1, saltRounds);
+  const hashedPassword2 = await bcrypt.hash(user.password2, saltRounds);
   user.password1 = hashedPassword1;
+  user.password2 = hashedPassword2
   next();
 });
 
