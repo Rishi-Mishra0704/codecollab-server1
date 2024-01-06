@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-
+import bcrypt from "bcrypt";
 export interface IUserRegister extends Document {
   username: string;
   email: string;
@@ -24,6 +24,17 @@ const UserLoginSchema = new Schema<IUserLogin>({
   password: { type: String, required: true },
 });
 
+
+// Hash the password1 field before saving to the database
+UserRegisterSchema.pre<IUserRegister>("save", async function (next) {
+  const user = this;
+  if (!user.isModified("password1")) return next();
+
+  const saltRounds = 10;
+  const hashedPassword1 = await bcrypt.hash(user.password1, saltRounds);
+  user.password1 = hashedPassword1;
+  next();
+});
 export const userRegisterModel = mongoose.model<IUserRegister>(
   "UserRegister",
   UserRegisterSchema
