@@ -12,9 +12,11 @@ interface IProject extends Document {
   fileSystem: FileSystemNode[];
 }
 
-const ProjectSchema = new Schema<IProject>({
+const projectSchema = new Schema<IProject>({
   name: { type: String, required: true },
   fileSystem: { type: [Object], default: [] as FileSystemNode[] },
 });
 
-const ProjectModel = mongoose.model<IProject>("Project", ProjectSchema);
+const projectModel = mongoose.model<IProject>("Project", projectSchema);
+
+export {projectModel, IProject}

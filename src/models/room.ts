@@ -1,20 +1,16 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
+import { IProject } from "./project";
 
-interface FileSystemNode {
-  name: string;
-  type: "file" | "folder";
-  extension?: string;
-  children?: FileSystemNode[];
+interface IRoom extends Document {
+  host: Types.ObjectId; // user creating the room
+  members: Types.ObjectId[]; // users who joined the room
+  projects: Types.ObjectId[]; // array of projects in the room
 }
 
-interface IProject extends Document {
-  name: string;
-  fileSystem: FileSystemNode[];
-}
-
-const ProjectSchema = new Schema<IProject>({
-  name: { type: String, required: true },
-  fileSystem: { type: [Object], default: [] as FileSystemNode[] },
+const roomSchema = new Schema<IRoom>({
+  host: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  projects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Project" }],
 });
-
-const ProjectModel = mongoose.model<IProject>("Project", ProjectSchema);
+const RoomModel = mongoose.model<IRoom>("Room", roomSchema);
+export { RoomModel, IRoom };
