@@ -1,5 +1,6 @@
-import { projectModel, IProject } from "../models/project";
 import { Request, Response } from "express";
+import { RoomModel } from "../models/room";
+import { IProject, projectModel } from "../models/project";
 
 // Create a new project
 const createProject = async (req: Request, res: Response) => {
@@ -23,6 +24,13 @@ const createProject = async (req: Request, res: Response) => {
 
     // Save the project to the database
     const savedProject = await newProject.save();
+
+    // Update the room's projects field
+    const room = await RoomModel.findByIdAndUpdate(
+      roomId,
+      { $push: { projects: savedProject._id } },
+      { new: true }
+    );
 
     // Return the saved project as a response
     return res.status(201).json(savedProject);
